@@ -43,7 +43,7 @@ console.log(keysClientes)
 
     const response = await LoadAccountsAPI(keysMaster, keysClientes)
 
-
+    console.log('response no modal', response)
     // const data = await response.json()
     // console.log("response lado cliente", data)
   }
