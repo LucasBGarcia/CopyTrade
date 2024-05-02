@@ -19,9 +19,6 @@ export async function InfoAccountBalance() {
                 balance: AccountsBalance
             })
         }))
-        console.log('accountBalance em infoAccountBalance', accountsBalance)
-        console.log('contas em infoAccountBalance', contas)
-
         return accountsBalance
     } else {
         return false

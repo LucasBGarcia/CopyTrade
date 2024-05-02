@@ -44,14 +44,9 @@ export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps)
   };
 
   async function handleSaveMaster() {
-    // setKeysArray(JSON.parse(keys))
     setLoading(true)
-    console.log(keysMaster)
-    console.log(keysClientes)
-
     const response = await LoadAccountsAPI(keysMaster, keysClientes)
     if (response) {
-      console.log('response no modal', response)
       handleClose(response)
       setLoading(false)
     }
