@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import { useEffect, useState } from "react";
 import ModalLoadMaster from "../utils/ModalLoadMaster";
 import { InfoAccountBalance } from "../connectAPI/infoAccountBalance";
+import { StartBot } from "../StartBot/StartBot";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -55,11 +56,14 @@ export default function Home() {
 
   async function AtivarBot() {
     setLoading(true)
-
-    const response = await fetch("http://localhost:3000/api/posts")
-    const data = await response.json()
+    try {
+      const start = await StartBot()
+      console.log('start', start)
+    } catch (error) {
+      console.error('Erro ao ativar bot:', error)
+    }
+    setLoading(false)
   }
-
   async function LoadAccountMaster() {
     setLoading(true)
     setOpenModal(true)

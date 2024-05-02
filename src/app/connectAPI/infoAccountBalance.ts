@@ -25,7 +25,7 @@ export async function InfoAccountBalance() {
     }
 }
 
-async function getInfoAccountBalance(apiKey: string, apiSecret: string) {
+export async function getInfoAccountBalance(apiKey: string, apiSecret: string) {
     try {
         if (!apiSecret) {
             throw new Error('API secret is not defined!');

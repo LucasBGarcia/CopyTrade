@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from "next/headers";
 import { TakeListenKey } from './TakeListenKey';
 import strict from 'assert/strict';
-import { InfoAccountBalance } from './infoAccountBalance';
+import { InfoAccountBalance, getInfoAccountBalance } from './infoAccountBalance';
 
 export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) {
     let objeto = []
@@ -13,6 +13,8 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         key: '',
         secret: ''
     }
+    const cookieStore = cookies()
+
 
     let accountsBalance: any = []
     try {
@@ -22,6 +24,17 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             key: splitMaster[0],
             secret: splitMaster[1]
         }
+
+        let valoresIniciais;
+        if (splitMaster) {
+            valoresIniciais = await getInfoAccountBalance(splitMaster[0].trim(), splitMaster[1].trim())
+            cookieStore.set({
+                name: "ValorInicialMaster",
+                value: JSON.stringify(valoresIniciais),
+                sameSite: 'strict'
+            })
+        }
+
         const splitClientes = keysClientes.split(',')
 
         for (let i = 0; i < splitClientes.length; i += 3) {
@@ -31,7 +44,6 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
                 secret: splitClientes[i + 2]
             })
         }
-        const cookieStore = cookies()
         cookieStore.set({
             name: "clients",
             value: JSON.stringify(objeto),
