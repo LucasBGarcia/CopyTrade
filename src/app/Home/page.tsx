@@ -42,7 +42,6 @@ export default function Home() {
 
   async function carregaValores() {
     const valores = await InfoAccountBalance()
-    console.log('valores em page', valores)
     if (valores) {
       setModalResponse(valores)
     }
@@ -59,7 +58,6 @@ export default function Home() {
 
     const response = await fetch("http://localhost:3000/api/posts")
     const data = await response.json()
-    console.log(data)
   }
 
   async function LoadAccountMaster() {
@@ -70,11 +68,9 @@ export default function Home() {
   const handleModalClose = (response: any) => {
     setOpenModal(false);
     if (response) {
-      console.log('response na page', response)
       setModalResponse(response);
       setLoading(false)
     }
-    console.log('ModalResponse', modalResponse)
   };
 
   return (
