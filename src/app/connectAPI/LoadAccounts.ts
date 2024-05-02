@@ -14,11 +14,7 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         secret: ''
     }
 
-    let accountsBalance = [{
-        name: '',
-        balance: ''
-
-    }]
+    let accountsBalance: any = []
     try {
 
         const splitMaster = keysMaster.split(',')
@@ -53,14 +49,19 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             sameSite: 'strict'
         })
 
-       await Promise.all(objeto.map(async(contas)=>{
-            const AccountsBalance = await InfoAccountBalance(contas.key.trim(),contas.secret.trim())
-            accountsBalance.push({
-                name:contas.name, 
-                balance: AccountsBalance})
+        await Promise.all(objeto.map(async (contas) => {
+            const AccountsBalance = await InfoAccountBalance()
+            console.log('accountBalance em LoadAccounts', AccountsBalance)
+            accountsBalance = AccountsBalance
         }))
+
+        cookieStore.set({
+            name: "accountBalances",
+            value: JSON.stringify(accountsBalance),
+            sameSite: 'strict'
+        })
         return accountsBalance
-        
+
     } catch (e) {
         return NextResponse.json({ e })
     }

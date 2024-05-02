@@ -1,7 +1,34 @@
+"use server"
 import crypto from "crypto"
 const apiUrl = 'https://api.binance.com/api'
-export async function InfoAccountBalance(apiKey:string,apiSecret:string ) {
+import { cookies } from "next/headers";
 
+
+export async function InfoAccountBalance() {
+    const cookieStore = cookies()
+    const contas = cookieStore.get('clients')
+
+    let accountsBalance: object[] = []
+    if (contas) {
+        const contasParse = JSON.parse(contas.value)
+        console.log(contasParse)
+        await Promise.all(contasParse.map(async (contas: any) => {
+            const AccountsBalance = await getInfoAccountBalance(contas.key.trim(), contas.secret.trim())
+            accountsBalance.push({
+                name: contas.name,
+                balance: AccountsBalance
+            })
+        }))
+        console.log('accountBalance em infoAccountBalance', accountsBalance)
+        console.log('contas em infoAccountBalance', contas)
+
+        return accountsBalance
+    } else {
+        return false
+    }
+}
+
+async function getInfoAccountBalance(apiKey: string, apiSecret: string) {
     try {
         if (!apiSecret) {
             throw new Error('API secret is not defined!');
@@ -14,8 +41,8 @@ export async function InfoAccountBalance(apiKey:string,apiSecret:string ) {
 
         const signature = generateSignature(queryString, apiSecret);
 
-        const result = await fetch(`${apiUrl}/v3/account?${queryString}&signature=${signature}`,{
-            method: 'GET',           
+        const result = await fetch(`${apiUrl}/v3/account?${queryString}&signature=${signature}`, {
+            method: 'GET',
             headers: {
                 'X-MBX-APIKEY': apiKey
             },
@@ -28,6 +55,7 @@ export async function InfoAccountBalance(apiKey:string,apiSecret:string ) {
         console.error(err)
     }
 }
-function generateSignature(queryString:string, apiSecret:string) {
+
+function generateSignature(queryString: string, apiSecret: string) {
     return crypto.createHmac('sha256', apiSecret).update(queryString).digest('hex');
 }

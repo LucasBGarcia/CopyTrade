@@ -1,4 +1,5 @@
-import { TextField } from '@mui/material';
+"use client"
+import { CircularProgress, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -27,23 +28,33 @@ const style = {
 
 interface ModalLoadMasterProps {
   Open: boolean,
-  setOpen: React.Dispatch<boolean>
+  onClose: (response: any) => void;
 }
 
-export default function ModalLoadMaster({ Open, setOpen }: ModalLoadMasterProps) {
+export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps) {
   const [keysMaster, setKeysMaster] = React.useState<any>('')
   const [keysClientes, setKeysClientes] = React.useState<any>('')
+  const [loading, setLoading] = React.useState(false)
 
-  const handleClose = () => setOpen(false)
+
+  const handleClose = (response: any) => {
+    onClose(response);
+    setKeysMaster('');
+    setKeysClientes('');
+  };
 
   async function handleSaveMaster() {
     // setKeysArray(JSON.parse(keys))
-console.log(keysMaster)
-console.log(keysClientes)
+    setLoading(true)
+    console.log(keysMaster)
+    console.log(keysClientes)
 
     const response = await LoadAccountsAPI(keysMaster, keysClientes)
-
-    console.log('response no modal', response)
+    if (response) {
+      console.log('response no modal', response)
+      handleClose(response)
+      setLoading(false)
+    }
     // const data = await response.json()
     // console.log("response lado cliente", data)
   }
@@ -60,37 +71,52 @@ console.log(keysClientes)
         <Box sx={style}>
           <Box >
 
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Envie os dados do Trade Master
-            </Typography>
+            {!loading ?
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Envie os dados do Trade Master
+              </Typography>
+              :
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Carregando contas
+              </Typography>
+            }
           </Box>
-          <Box sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex' }} >
+          {!loading ?
+            <>
+              <Box sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex' }} >
 
-            <TextField
-              id="outlined-multiline-flexible"
-              label="KEY Master"
-              multiline
-              maxRows={20}
-              sx={{ width: '80%' }}
-              onChange={(e) => setKeysMaster(e.target.value)}
-            />
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="KEY Master"
+                  multiline
+                  maxRows={20}
+                  sx={{ width: '80%' }}
+                  onChange={(e) => setKeysMaster(e.target.value)}
+                />
 
-          </Box>
-          <Box sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex' }} >
+              </Box>
+              <Box sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex' }} >
 
-            <TextField
-              id="outlined-multiline-flexible"
-              label="KEYS clientes"
-              multiline
-              maxRows={20}
-              sx={{ width: '80%' }}
-              onChange={(e) => setKeysClientes(e.target.value)}
-            />
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="KEYS clientes"
+                  multiline
+                  maxRows={20}
+                  sx={{ width: '80%' }}
+                  onChange={(e) => setKeysClientes(e.target.value)}
+                />
 
-          </Box>
-          <Button variant='contained' color="success" onClick={handleSaveMaster}>Enviar</Button>
-          <Button variant='contained' color="error" onClick={handleClose}>close</Button>
+              </Box>
+              <Button variant='contained' color="success" onClick={handleSaveMaster}>Enviar</Button>
+              <Button variant='contained' color="error" onClick={handleClose}>close</Button>
 
+
+            </>
+            :
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress />
+            </Box>
+          }
 
         </Box>
 
