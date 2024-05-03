@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Container, LinearProgress, TextField, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,34 +10,19 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from "react";
-import ModalLoadMaster from "../utils/ModalLoadMaster";
-import { InfoAccountBalance } from "../connectAPI/infoAccountBalance";
-import { StartBot } from "../StartBot/StartBot";
+import ModalLoadMaster from "../components/ModalLoadMaster";
+import { InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
+import { StartBot } from "../utils/StartBot/StartBot";
+import { Navbar } from "../components/Navbar";
+import TableAccountBalance from "../components/TableAccoutBalance";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  }
-}));
 
 export default function Home() {
 
   const [OpenModal, setOpenModal] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
+  const [WaitingTrade, setWaitingTrade] = useState(false)
+
   const [modalResponse, setModalResponse] = useState<any>(null);
 
 
@@ -55,14 +40,14 @@ export default function Home() {
   }, [])
 
   async function AtivarBot() {
-    setLoading(true)
+    setWaitingTrade(true)
     try {
       const start = await StartBot()
       console.log('start', start)
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
     }
-    setLoading(false)
+    setWaitingTrade(false)
   }
   async function LoadAccountMaster() {
     setLoading(true)
@@ -71,8 +56,13 @@ export default function Home() {
 
   const handleModalClose = (response: any) => {
     setOpenModal(false);
-    if (response) {
+    console.log('response na page', response)
+
+    if (response && response.name) {
       setModalResponse(response);
+      setLoading(false)
+    }else{
+      carregaValores()
       setLoading(false)
     }
   };
@@ -82,66 +72,94 @@ export default function Home() {
       width='100%'
       height='100vh'
       display='flex'
-      flexDirection='column'
-      alignItems='center'
-      justifyContent='center'
+    // flexDirection='column'
+    // alignItems='center'
+    // justifyContent='center'
     >
       {
         !loading ?
           <>
-            <Box width={'50%'}>
-
-              {modalResponse ? (
-                <TableContainer component={Paper}>
-                  <Table aria-label="customized table">
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell align="center">Nome</StyledTableCell>
-                        <StyledTableCell align="center">Valores</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {modalResponse.map((row: any) => (
-                        <StyledTableRow key={row.name}>
-                          <StyledTableCell align="center" component="th" scope="row">
-                            {row.name}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">{row.balance}</StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : null}
-            </Box>
-
-            <Box
+            <Box width='100%'
+              height='100vh'
               display='flex'
-              flexDirection='column'
-              gap={2}
-              width={450}
-              alignItems='center' // Alinha os elementos filhos horizontalmente
+              flexDirection='row'
+              // alignItems='center'
+              justifyContent='center'
             >
-              <Button variant='contained' onClick={() => LoadAccountMaster()}>
-                Carregar conta Master
-              </Button>
-              {modalResponse ?
-                <Button variant='contained' onClick={() => AtivarBot()}>
-                  Ativar bot
+
+              <Box
+                display='flex'
+                flexDirection='column'
+                width={'100%'}
+                alignItems='center'
+                marginTop={1}
+              >
+
+                {modalResponse ? (
+                  <Box
+                    display='flex'
+                    width={'80%'}
+                  >
+                    <TableAccountBalance modalResponse={modalResponse} />
+                  </Box>
+                ) :
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    width={'100%'}
+                    alignItems='center'
+                    marginTop={1}
+                  >
+                    <Typography >Nenhuma conta carregada</Typography>
+                  </Box>
+                }
+              </Box>
+
+              <Box
+                display='flex'
+                flexDirection='column'
+                gap={2}
+                width={'100%'}
+                alignItems='center'
+                marginTop={1} // Alinha os elementos filhos horizontalmente
+              >
+                <Button variant='contained' onClick={() => LoadAccountMaster()}>
+                  Carregar contas
                 </Button>
-                : null
-              }
+                {(modalResponse && !WaitingTrade) ?
+                  <Button variant='contained' onClick={() => AtivarBot()}>
+                    Ativar bot
+                  </Button>
+                  : null
+                }
+              </Box>
             </Box>
           </>
 
           :
-          <Box sx={{ display: 'flex' }}>
+          <Box
+            width='100%'
+            height='100vh'
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            justifyContent='center'
+          >
+            <Typography>Carregando informações</Typography>
             <CircularProgress />
           </Box>
+
+      }
+      {
+        WaitingTrade ?
+          <Box sx={{ width: '100%' }}>
+            <LinearProgress />
+          </Box> :
+          null
       }
 
       <ModalLoadMaster Open={OpenModal} onClose={handleModalClose} />
-    </Box>
+    </Box >
 
   );
 }
