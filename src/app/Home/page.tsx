@@ -11,10 +11,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from "react";
 import ModalLoadMaster from "../components/ModalLoadMaster";
-import { InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
+import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
 import { StartBot } from "../utils/StartBot/StartBot";
 import { Navbar } from "../components/Navbar";
 import TableAccountBalance from "../components/TableAccoutBalance";
+import { Trade } from "../utils/trade/trade";
+import InfosTrade from "../components/InfosTrade";
 
 
 export default function Home() {
@@ -24,6 +26,8 @@ export default function Home() {
   const [WaitingTrade, setWaitingTrade] = useState(false)
 
   const [modalResponse, setModalResponse] = useState<any>(null);
+  const [TradeReceived, setTradeReceived] = useState<any>(null);
+
 
 
   async function carregaValores() {
@@ -42,8 +46,10 @@ export default function Home() {
   async function AtivarBot() {
     setWaitingTrade(true)
     try {
-      const start = await StartBot()
-      console.log('start', start)
+      const trade = await StartBot()
+      setTradeReceived(trade)
+      const newTrade = await Trade(trade)
+      console.log('trade', trade)
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
     }
@@ -61,12 +67,25 @@ export default function Home() {
     if (response && response.name) {
       setModalResponse(response);
       setLoading(false)
-    }else{
+    } else {
       carregaValores()
       setLoading(false)
     }
   };
 
+
+
+  async function Funcaoteste() {
+    setWaitingTrade(true)
+    try {
+
+      const trade = await InfoAccount('eQaoMJdUfjXDHwDT3NT17ESKBK2dh2aoc9EIhjpNV23QjXlJE3GanPmnY0SBrlL5', 'LcDt9GIHnSEoCILPT86elqsODFxzAsRm9EK2SInAX0qZrzAY0boAks579ePpxSsy')
+      console.log('trade', trade)
+    } catch (error) {
+      console.error('Erro ao ativar bot:', error)
+    }
+    setWaitingTrade(false)
+  }
   return (
     <Box
       width='100%'
@@ -98,9 +117,28 @@ export default function Home() {
                 {modalResponse ? (
                   <Box
                     display='flex'
+                    flexDirection='column'
                     width={'80%'}
                   >
                     <TableAccountBalance modalResponse={modalResponse} />
+                    {TradeReceived ?
+                      <Box
+                        display='flex'
+                        flexDirection='column'
+                        gap={2}
+                        width={'80%'}
+                        marginTop={1}
+                        alignItems='center'
+                      >
+                        <InfosTrade dados={TradeReceived} />
+                        <Typography>Efetuando trade na conta dos clientes</Typography>
+                        <Box width="100%">
+                          <LinearProgress />
+                        </Box>
+                      </Box>
+
+                      : null
+                    }
                   </Box>
                 ) :
                   <Box
@@ -130,9 +168,32 @@ export default function Home() {
                   <Button variant='contained' onClick={() => AtivarBot()}>
                     Ativar bot
                   </Button>
+
                   : null
                 }
+                <Button variant='contained' onClick={() => Funcaoteste()}>
+                  botao para testes de retornos
+                </Button>
+                {
+                  WaitingTrade ?
+                    <Box
+                      display='flex'
+                      flexDirection='column'
+                      gap={2}
+                      width={'80%'}
+                      marginTop={1}
+                      alignItems='center' // Centraliza verticalmente os elementos filhos
+                    >
+                      <Typography>Aguardando trade</Typography>
+                      <Box width="100%">
+                        <LinearProgress />
+                      </Box>
+                    </Box>
+                    :
+                    null
+                }
               </Box>
+
             </Box>
           </>
 
@@ -150,14 +211,6 @@ export default function Home() {
           </Box>
 
       }
-      {
-        WaitingTrade ?
-          <Box sx={{ width: '100%' }}>
-            <LinearProgress />
-          </Box> :
-          null
-      }
-
       <ModalLoadMaster Open={OpenModal} onClose={handleModalClose} />
     </Box >
 

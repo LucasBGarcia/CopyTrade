@@ -15,11 +15,11 @@ export async function StartBot() {
                 const ws = new WebSocket(`${BINANCE_WS_URL}/${listenKeyParse.listenKey}`);
                 ws.onmessage = async (event: any) => {
                     const trade = JSON.parse(event.data)
-                    resolve(trade); // Resolving the promise with received data
+                    resolve(trade); 
                 }
             }
         } catch (err) {
-            reject(err); // Rejecting the promise in case of an error
+            reject(err); 
         }
     });
 }

@@ -30,7 +30,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }));
   
 export default function TableAccountBalance(modalResponse:any){
-    console.log(modalResponse)
     return(
         <TableContainer component={Paper}>
                   <Table aria-label="customized table">
