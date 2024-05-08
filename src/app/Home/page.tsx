@@ -1,22 +1,13 @@
 "use client"
 
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, Container, LinearProgress, TextField, Typography } from "@mui/material";
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { Box, Button, CircularProgress, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import ModalLoadMaster from "../components/ModalLoadMaster";
-import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
-import { StartBot } from "../utils/StartBot/StartBot";
-import { Navbar } from "../components/Navbar";
-import TableAccountBalance from "../components/TableAccoutBalance";
-import { Trade } from "../utils/trade/trade";
 import InfosTrade from "../components/InfosTrade";
+import ModalLoadMaster from "../components/ModalLoadMaster";
+import TableAccountBalance from "../components/TableAccoutBalance";
+import { StartBot } from "../utils/StartBot/StartBot";
+import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
+import { Trade } from "../utils/trade/trade";
 
 
 export default function Home() {
