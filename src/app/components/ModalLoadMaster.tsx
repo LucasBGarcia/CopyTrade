@@ -6,7 +6,7 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { FormEvent } from 'react'
-import { LoadAccountsAPI } from '../connectAPI/LoadAccounts';
+import { LoadAccountsAPI } from '../utils/connectAPI/LoadAccounts';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -38,7 +38,10 @@ export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps)
 
 
   const handleClose = (response: any) => {
-    onClose(response);
+    console.log('response', response)
+    if (response) {
+      onClose(response)
+    } 
     setKeysMaster('');
     setKeysClientes('');
   };

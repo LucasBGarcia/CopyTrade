@@ -1,43 +1,24 @@
 "use client"
 
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, TextField, Typography } from "@mui/material";
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { Box, Button, CircularProgress, LinearProgress, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import ModalLoadMaster from "../utils/ModalLoadMaster";
-import { InfoAccountBalance } from "../connectAPI/infoAccountBalance";
+import InfosTrade from "../components/InfosTrade";
+import ModalLoadMaster from "../components/ModalLoadMaster";
+import TableAccountBalance from "../components/TableAccoutBalance";
+import { StartBot } from "../utils/StartBot/StartBot";
+import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
+import { Trade } from "../utils/trade/trade";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  }
-}));
 
 export default function Home() {
 
   const [OpenModal, setOpenModal] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
+  const [WaitingTrade, setWaitingTrade] = useState(false)
+
   const [modalResponse, setModalResponse] = useState<any>(null);
+  const [TradeReceived, setTradeReceived] = useState<any>(null);
+
 
 
   async function carregaValores() {
@@ -54,12 +35,17 @@ export default function Home() {
   }, [])
 
   async function AtivarBot() {
-    setLoading(true)
-
-    const response = await fetch("http://localhost:3000/api/posts")
-    const data = await response.json()
+    setWaitingTrade(true)
+    try {
+      const trade = await StartBot()
+      setTradeReceived(trade)
+      const newTrade = await Trade(trade)
+      console.log('trade', trade)
+    } catch (error) {
+      console.error('Erro ao ativar bot:', error)
+    }
+    setWaitingTrade(false)
   }
-
   async function LoadAccountMaster() {
     setLoading(true)
     setOpenModal(true)
@@ -67,77 +53,157 @@ export default function Home() {
 
   const handleModalClose = (response: any) => {
     setOpenModal(false);
-    if (response) {
+    console.log('response na page', response)
+
+    if (response && response.name) {
       setModalResponse(response);
+      setLoading(false)
+    } else {
+      carregaValores()
       setLoading(false)
     }
   };
 
+
+
+  async function Funcaoteste() {
+    setWaitingTrade(true)
+    try {
+
+      const trade = await InfoAccount('eQaoMJdUfjXDHwDT3NT17ESKBK2dh2aoc9EIhjpNV23QjXlJE3GanPmnY0SBrlL5', 'LcDt9GIHnSEoCILPT86elqsODFxzAsRm9EK2SInAX0qZrzAY0boAks579ePpxSsy')
+      console.log('trade', trade)
+    } catch (error) {
+      console.error('Erro ao ativar bot:', error)
+    }
+    setWaitingTrade(false)
+  }
   return (
     <Box
       width='100%'
       height='100vh'
       display='flex'
-      flexDirection='column'
-      alignItems='center'
-      justifyContent='center'
+    // flexDirection='column'
+    // alignItems='center'
+    // justifyContent='center'
     >
       {
         !loading ?
           <>
-            <Box width={'50%'}>
-
-              {modalResponse ? (
-                <TableContainer component={Paper}>
-                  <Table aria-label="customized table">
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell align="center">Nome</StyledTableCell>
-                        <StyledTableCell align="center">Valores</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {modalResponse.map((row: any) => (
-                        <StyledTableRow key={row.name}>
-                          <StyledTableCell align="center" component="th" scope="row">
-                            {row.name}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">{row.balance}</StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : null}
-            </Box>
-
-            <Box
+            <Box width='100%'
+              height='100vh'
               display='flex'
-              flexDirection='column'
-              gap={2}
-              width={450}
-              alignItems='center' // Alinha os elementos filhos horizontalmente
+              flexDirection='row'
+              // alignItems='center'
+              justifyContent='center'
             >
-              <Button variant='contained' onClick={() => LoadAccountMaster()}>
-                Carregar conta Master
-              </Button>
-              {modalResponse ?
-                <Button variant='contained' onClick={() => AtivarBot()}>
-                  Ativar bot
+
+              <Box
+                display='flex'
+                flexDirection='column'
+                width={'100%'}
+                alignItems='center'
+                marginTop={1}
+              >
+
+                {modalResponse ? (
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    width={'80%'}
+                  >
+                    <TableAccountBalance modalResponse={modalResponse} />
+                    {TradeReceived ?
+                      <Box
+                        display='flex'
+                        flexDirection='column'
+                        gap={2}
+                        width={'80%'}
+                        marginTop={1}
+                        alignItems='center'
+                      >
+                        <InfosTrade dados={TradeReceived} />
+                        <Typography>Efetuando trade na conta dos clientes</Typography>
+                        <Box width="100%">
+                          <LinearProgress />
+                        </Box>
+                      </Box>
+
+                      : null
+                    }
+                  </Box>
+                ) :
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    width={'100%'}
+                    alignItems='center'
+                    marginTop={1}
+                  >
+                    <Typography >Nenhuma conta carregada</Typography>
+                  </Box>
+                }
+              </Box>
+
+              <Box
+                display='flex'
+                flexDirection='column'
+                gap={2}
+                width={'100%'}
+                alignItems='center'
+                marginTop={1} // Alinha os elementos filhos horizontalmente
+              >
+                <Button variant='contained' onClick={() => LoadAccountMaster()}>
+                  Carregar contas
                 </Button>
-                : null
-              }
+                {(modalResponse && !WaitingTrade) ?
+                  <Button variant='contained' onClick={() => AtivarBot()}>
+                    Ativar bot
+                  </Button>
+
+                  : null
+                }
+                <Button variant='contained' onClick={() => Funcaoteste()}>
+                  botao para testes de retornos
+                </Button>
+                {
+                  WaitingTrade ?
+                    <Box
+                      display='flex'
+                      flexDirection='column'
+                      gap={2}
+                      width={'80%'}
+                      marginTop={1}
+                      alignItems='center' // Centraliza verticalmente os elementos filhos
+                    >
+                      <Typography>Aguardando trade</Typography>
+                      <Box width="100%">
+                        <LinearProgress />
+                      </Box>
+                    </Box>
+                    :
+                    null
+                }
+              </Box>
+
             </Box>
           </>
 
           :
-          <Box sx={{ display: 'flex' }}>
+          <Box
+            width='100%'
+            height='100vh'
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            justifyContent='center'
+          >
+            <Typography>Carregando informações</Typography>
             <CircularProgress />
           </Box>
-      }
 
+      }
       <ModalLoadMaster Open={OpenModal} onClose={handleModalClose} />
-    </Box>
+    </Box >
 
   );
 }
