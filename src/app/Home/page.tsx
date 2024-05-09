@@ -8,6 +8,7 @@ import TableAccountBalance from "../components/TableAccoutBalance";
 import { StartBot } from "../utils/StartBot/StartBot";
 import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
 import { Trade } from "../utils/trade/trade";
+import api from "../services/api";
 
 
 export default function Home() {
@@ -70,8 +71,13 @@ export default function Home() {
     setWaitingTrade(true)
     try {
 
-      const trade = await InfoAccount('eQaoMJdUfjXDHwDT3NT17ESKBK2dh2aoc9EIhjpNV23QjXlJE3GanPmnY0SBrlL5', 'LcDt9GIHnSEoCILPT86elqsODFxzAsRm9EK2SInAX0qZrzAY0boAks579ePpxSsy')
-      console.log('trade', trade)
+      const response = api.get('/LoadAccounts').then((response) => {
+        const data = response.data; // Extraia o 'data' do objeto de resposta
+        console.log(data);
+      });
+
+      console.log(response)
+
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
     }
