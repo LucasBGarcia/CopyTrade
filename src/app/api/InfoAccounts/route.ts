@@ -1,6 +1,5 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { NextResponse } from 'next/server'
 
 type Data = {
@@ -8,8 +7,7 @@ type Data = {
 }
 
 export async function GET(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>
+    req: Request,
 ) {
     const response = await fetch(`https://jsonplaceholder.typicode.com/posts`)
 

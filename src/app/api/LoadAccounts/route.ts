@@ -1,15 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse } from 'next/server'
 import { cookies } from "next/headers";
-import { json } from 'stream/consumers';
+import { NextResponse } from 'next/server';
 
 type Data = {
     name: string
 }
 export async function GET(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>
+    req: Request,
 ) {
 
     const cookiesStore = cookies()
