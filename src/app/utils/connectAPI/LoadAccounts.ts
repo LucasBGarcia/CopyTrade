@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { TakeListenKey } from './TakeListenKey';
 import strict from 'assert/strict';
 import { InfoAccountBalance, getInfoAccountBalance } from './infoAccountBalance';
+import api from '@/app/services/api';
 
 export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) {
     let objeto = []
@@ -54,10 +55,12 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             value: JSON.stringify(traderMaster),
             sameSite: 'strict'
         })
-        const listenKey = await TakeListenKey(traderMaster.key)
+        console.log('testetstestes')
+        const listenKeyResponse = await api.post('/TakeListenKey',  JSON.stringify(traderMaster))
+           console.log('listekey loadAccounnt', listenKeyResponse.data.data.listenKey)
         cookieStore.set({
             name: "listen",
-            value: JSON.stringify(listenKey),
+            value: JSON.stringify(listenKeyResponse.data.data.listenKey),
             sameSite: 'strict'
         })
 
@@ -78,4 +81,5 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         return NextResponse.json({ e })
     }
 }
+
 

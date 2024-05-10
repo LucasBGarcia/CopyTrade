@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { FormEvent } from 'react'
 import { LoadAccountsAPI } from '../utils/connectAPI/LoadAccounts';
+import api from '../services/api';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,14 +42,19 @@ export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps)
     console.log('response', response)
     if (response) {
       onClose(response)
-    } 
+    }
     setKeysMaster('');
     setKeysClientes('');
   };
 
   async function handleSaveMaster() {
     setLoading(true)
+    // const response = api.get('/LoadAccounts').then((response) => {
+    //   const data = response.data; // Extraia o 'data' do objeto de resposta
+    //   console.log(data);
+    // });
     const response = await LoadAccountsAPI(keysMaster, keysClientes)
+    console.log('responseEEEE', response)
     if (response) {
       handleClose(response)
       setLoading(false)
@@ -87,6 +93,7 @@ export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps)
                   id="outlined-multiline-flexible"
                   label="KEY Master"
                   multiline
+                  defaultValue={keysMaster}
                   maxRows={20}
                   sx={{ width: '80%' }}
                   onChange={(e) => setKeysMaster(e.target.value)}
@@ -98,6 +105,7 @@ export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps)
                 <TextField
                   id="outlined-multiline-flexible"
                   label="KEYS clientes"
+                  defaultValue={keysClientes}
                   multiline
                   maxRows={20}
                   sx={{ width: '80%' }}
