@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ data })
     } catch (error) {
         console.log('Error fetching data:', error);
-        return NextResponse.json({ message: 'Error fetching data' })
+        return NextResponse.json({ message: error })
 
     }
 }
