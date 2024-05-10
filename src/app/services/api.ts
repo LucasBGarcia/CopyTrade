@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://bottrade-git-develop-lucasbgarcias-projects.vercel.app/",
 });
 
 export default api;
