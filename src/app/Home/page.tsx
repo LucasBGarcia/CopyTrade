@@ -22,18 +22,18 @@ export default function Home() {
 
 
 
-  async function carregaValores() {
-    const valores = await InfoAccountBalance()
-    if (valores) {
-      setModalResponse(valores)
-    }
-    setLoading(false)
-  }
-  useEffect(() => {
-    setLoading(true)
+  // async function carregaValores() {
+  //   const valores = await InfoAccountBalance()
+  //   if (valores) {
+  //     setModalResponse(valores)
+  //   }
+  //   setLoading(false)
+  // }
+  // useEffect(() => {
+  //   setLoading(true)
 
-    carregaValores()
-  }, [])
+  //   carregaValores()
+  // }, [])
 
   async function AtivarBot() {
     setWaitingTrade(true)
@@ -60,7 +60,7 @@ export default function Home() {
       setModalResponse(response);
       setLoading(false)
     } else {
-      carregaValores()
+      // carregaValores()
       setLoading(false)
     }
   };
@@ -70,13 +70,17 @@ export default function Home() {
   async function Funcaoteste() {
     setWaitingTrade(true)
     try {
+      let traderMaster = {
+        key: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
+        secret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP'
+    }
+    const listenKeyResponse = await api.post('/TakeListenKey', JSON.stringify(traderMaster))
+    console.log('listekey loadAccounnt', listenKeyResponse.data.data.listenKey) 
+    // const response = api.get('/LoadAccounts').then((response) => {
+      //   const data = response.data; // Extraia o 'data' do objeto de resposta
+      //   console.log(data);
+      // });
 
-      const response = api.get('/LoadAccounts').then((response) => {
-        const data = response.data; // Extraia o 'data' do objeto de resposta
-        console.log(data);
-      });
-
-      console.log(response)
 
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
