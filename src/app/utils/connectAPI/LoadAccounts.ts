@@ -27,14 +27,14 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         }
 
         let valoresIniciais;
-        if (splitMaster) {
-            valoresIniciais = await getInfoAccountBalance(splitMaster[0].trim(), splitMaster[1].trim())
-            cookieStore.set({
-                name: "ValorInicialMaster",
-                value: JSON.stringify(valoresIniciais),
-                sameSite: 'strict'
-            })
-        }
+        // if (splitMaster) {
+        //     valoresIniciais = await getInfoAccountBalance(splitMaster[0].trim(), splitMaster[1].trim())
+        //     cookieStore.set({
+        //         name: "ValorInicialMaster",
+        //         value: JSON.stringify(valoresIniciais),
+        //         sameSite: 'strict'
+        //     })
+        // }
 
         const splitClientes = keysClientes.split(',')
 
@@ -64,10 +64,21 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             sameSite: 'strict'
         })
 
+        const accBal = [
+            {
+            name: 'Bruno',
+            balance: '15111'
+        },
+        {
+            name:'Renan',
+            balance: '15555'
+        }
+    ]
+
         await Promise.all(objeto.map(async (contas) => {
-            const AccountsBalance = await InfoAccountBalance()
-            console.log('accountBalance em LoadAccounts', AccountsBalance)
-            accountsBalance = AccountsBalance
+            // const AccountsBalance = await InfoAccountBalance()
+            // console.log('accountBalance em LoadAccounts', AccountsBalance)
+            accountsBalance = accBal
         }))
 
         cookieStore.set({
