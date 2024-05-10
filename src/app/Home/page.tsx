@@ -75,7 +75,7 @@ export default function Home() {
         secret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP'
     }
     const listenKeyResponse = await api.post('/TakeListenKey', JSON.stringify(traderMaster))
-    console.log('listekey loadAccounnt', listenKeyResponse.data.data.listenKey) 
+    console.log('listekey loadAccounnt', listenKeyResponse) 
     // const response = api.get('/LoadAccounts').then((response) => {
       //   const data = response.data; // Extraia o 'data' do objeto de resposta
       //   console.log(data);
