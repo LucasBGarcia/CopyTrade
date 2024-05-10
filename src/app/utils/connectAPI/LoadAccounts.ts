@@ -26,7 +26,7 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             secret: splitMaster[1]
         }
 
-        let valoresIniciais;
+        // let valoresIniciais;
         // if (splitMaster) {
         //     valoresIniciais = await getInfoAccountBalance(splitMaster[0].trim(), splitMaster[1].trim())
         //     cookieStore.set({
@@ -56,8 +56,8 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             sameSite: 'strict'
         })
         console.log('testetstestes')
-        const listenKeyResponse = await api.post('/TakeListenKey',  JSON.stringify(traderMaster))
-           console.log('listekey loadAccounnt', listenKeyResponse.data.data.listenKey)
+        const listenKeyResponse = await api.post('/TakeListenKey', JSON.stringify(traderMaster))
+        console.log('listekey loadAccounnt', listenKeyResponse.data.data.listenKey)
         cookieStore.set({
             name: "listen",
             value: JSON.stringify(listenKeyResponse.data.data.listenKey),
@@ -66,21 +66,21 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
 
         const accBal = [
             {
-            name: 'Bruno',
-            balance: '15111'
-        },
-        {
-            name:'Renan',
-            balance: '15555'
-        }
-    ]
+                name: 'Bruno',
+                balance: '15111'
+            },
+            {
+                name: 'Renan',
+                balance: '15555'
+            }
+        ]
 
         await Promise.all(objeto.map(async (contas) => {
-            // const AccountsBalance = await InfoAccountBalance()
-            // console.log('accountBalance em LoadAccounts', AccountsBalance)
+            //    // const AccountsBalance = await InfoAccountBalance()
+            //  // console.log('accountBalance em LoadAccounts', AccountsBalance)
             accountsBalance = accBal
         }))
-
+        console.log(accBal)
         cookieStore.set({
             name: "accountBalances",
             value: JSON.stringify(accountsBalance),

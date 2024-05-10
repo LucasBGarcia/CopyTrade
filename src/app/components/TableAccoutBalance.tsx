@@ -35,7 +35,7 @@ export default function TableAccountBalance(modalResponse:any){
                   <Table aria-label="customized table">
                     <TableHead>
                       <TableRow>
-                        <StyledTableCell align="center">Nome</StyledTableCell>
+                        <StyledTableCell align="center">Nomeee</StyledTableCell>
                         <StyledTableCell align="center">Valores</StyledTableCell>
                       </TableRow>
                     </TableHead>
