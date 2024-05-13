@@ -70,9 +70,14 @@ export default function Home() {
   async function Funcaoteste() {
     setWaitingTrade(true)
     try {
+      const valoresIniciais = await api.post('/get-account-balance-usdt', {
+        apiKey: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
+        apiSecret:'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
+    });
+    console.log('Valores iniciais:', valoresIniciais.data);
 
-      const trade = await api.get('/take-listen-key')
-      console.log('trade', trade)
+      // const trade = await api.get('/take-listen-key')
+      // console.log('trade', trade)
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
     }
