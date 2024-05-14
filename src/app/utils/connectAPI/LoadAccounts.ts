@@ -28,6 +28,7 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         }
         if (splitMaster) {
             try {
+                console.log('valores iniciais antes')
                 const valoresIniciais = await axios.post('http://localhost:3000/get-account-balance-usdt', {
                     apiKey: splitMaster[0].trim(),
                     apiSecret: splitMaster[1].trim(),
