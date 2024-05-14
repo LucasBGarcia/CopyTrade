@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 const cookieStore = cookies()
 
 export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) {
-const cookieStore = cookies()
+    const cookieStore = cookies()
 
     console.log('keys recebidas em cima', keysMaster, keysClientes)
     let objeto = []
@@ -103,9 +103,9 @@ const cookieStore = cookies()
         // } catch (err) {
         //     console.log(err)
         // }
-        const ret =carrega_balances(true, objeto, splitMaster[0].trim(),splitMaster[1].trim(),)
+        const ret = await carrega_balances(true, objeto, splitMaster[0].trim(), splitMaster[1].trim(),)
         console.log('keys recebidas em baixo', keysMaster, keysClientes)
-        return(ret)
+        return (ret)
 
     } catch (e) {
         return NextResponse.json({ e })
@@ -113,10 +113,10 @@ const cookieStore = cookies()
 }
 
 
-async function carrega_balances(ok: boolean, objeto: any, tradermasterKey: string,tradermasterSecret:string) {
-    
-const cookieStore = cookies()
-if (ok) {
+async function carrega_balances(ok: boolean, objeto: any, tradermasterKey: string, tradermasterSecret: string) {
+
+    const cookieStore = cookies()
+    if (ok) {
 
         try {
             console.log('listen key')
