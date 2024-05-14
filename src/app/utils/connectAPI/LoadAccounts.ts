@@ -7,6 +7,7 @@ import { TakeListenKey } from './TakeListenKey';
 import strict from 'assert/strict';
 import { InfoAccountBalance, getInfoAccountBalance } from './infoAccountBalance';
 import api from '@/app/services/api';
+import axios from 'axios';
 
 export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) {
     let objeto = []
@@ -27,7 +28,7 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         }
         if (splitMaster) {
             try {
-                const valoresIniciais = await api.post('/get-account-balance-usdt', {
+                const valoresIniciais = await axios.post('http://localhost:3000/get-account-balance-usdt', {
                     apiKey: splitMaster[0].trim(),
                     apiSecret: splitMaster[1].trim(),
                 });
