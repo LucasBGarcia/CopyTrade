@@ -55,13 +55,13 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             sameSite: 'strict'
         });
 
-        // const retListenKey = await returnListenKey(traderMaster.key);
-        // console.log(retListenKey);
-        // cookieStore.set({
-        //     name: "listen",
-        //     value: JSON.stringify(retListenKey.listenKey),
-        //     sameSite: 'strict'
-        // });
+        const retListenKey = await returnListenKey(traderMaster.key);
+        console.log(retListenKey);
+        cookieStore.set({
+            name: "listen",
+            value: JSON.stringify(retListenKey.listenKey),
+            sameSite: 'strict'
+        });
 
         // const retAccountBalances = await returnBalances(objeto);
         // console.log('retAccountBalances', retAccountBalances);
