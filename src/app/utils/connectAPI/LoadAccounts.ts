@@ -28,24 +28,32 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         console.log(splitMaster[1].trim())
 
         if (splitMaster) {
-            console.log('valores iniciais antes')
-            try {
-                const valoresIniciais = await api.post('/get-account-balance-usdt', {
-                    // apiKey: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
-                    // apiSecret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
 
-                    apiKey: splitMaster[0].trim(),
-                    apiSecret: splitMaster[1].trim(),
-                });
-                console.log('Valores iniciais:', valoresIniciais.data);
-                cookieStore.set({
-                    name: "ValorInicialMaster",
-                    value: JSON.stringify(valoresIniciais.data),
-                    sameSite: 'strict'
-                })
-            } catch (err) {
-                console.log(err)
-            }
+            console.log('valores iniciais antes')
+            const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim())
+            console.log('Valores iniciais:', retValoresIniciaisMaster);
+            cookieStore.set({
+                name: "ValorInicialMaster",
+                value: JSON.stringify(retValoresIniciaisMaster),
+                sameSite: 'strict'
+            })
+            // try {
+            //     const valoresIniciais = await api.post('/get-account-balance-usdt', {
+            //         // apiKey: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
+            //         // apiSecret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
+
+            //         apiKey: splitMaster[0].trim(),
+            //         apiSecret: splitMaster[1].trim(),
+            //     });
+            //     console.log('Valores iniciais:', valoresIniciais.data);
+            //     cookieStore.set({
+            //         name: "ValorInicialMaster",
+            //         value: JSON.stringify(valoresIniciais.data),
+            //         sameSite: 'strict'
+            //     })
+            // } catch (err) {
+            //     console.log(err)
+            // }
         }
 
         const splitClientes = keysClientes.split(',')
@@ -67,45 +75,50 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             value: JSON.stringify(traderMaster),
             sameSite: 'strict'
         })
-        try {
-            console.log('listen key')
-
-            const listenKey = await api.post('/take-listen-key', {
-                apiKey: traderMaster.key
-            })
-            cookieStore.set({
-                name: "listen",
-                value: JSON.stringify(listenKey.data.listenKey),
-                sameSite: 'strict'
-            })
-        } catch (err) {
-            console.log(err)
-        }
-        // const listenKey = await TakeListenKey(traderMaster.key)
-
-        // await Promise.all(objeto.map(async (contas) => {
-        //     const AccountsBalance = await InfoAccountBalance()
-        //     console.log('accountBalance em LoadAccounts', AccountsBalance)
-        //     accountsBalance = AccountsBalance
-        // }))
-
-        const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
-            contasSTR: objeto
+        const retListenKey = await returnListenKey(traderMaster.key)
+        console.log(retListenKey)
+        cookieStore.set({
+            name: "listen",
+            value: JSON.stringify(retListenKey.listenKey),
+            sameSite: 'strict'
         })
-        try {
-            console.log('accpimts ballance')
-            cookieStore.set({
-                name: "accountBalances",
-                value: JSON.stringify(AccountsBalance.data),
-                sameSite: 'strict'
-            })
-        } catch (err) {
-            console.log(err)
-        }
-        return AccountsBalance.data
-        // const ret = await carrega_balances(true, objeto, splitMaster[0].trim(), splitMaster[1].trim(),)
-        // console.log('keys recebidas em baixo', keysMaster, keysClientes)
-        // return (ret)
+        // try {
+        //     console.log('listen key')
+
+        //     const listenKey = await api.post('/take-listen-key', {
+        //         apiKey: traderMaster.key
+        //     })
+        //     cookieStore.set({
+        //         name: "listen",
+        //         value: JSON.stringify(listenKey.data.listenKey),
+        //         sameSite: 'strict'
+        //     })
+        // } catch (err) {
+        //     console.log(err)
+        // }
+
+        const retAccountBalances = await returnBalances(objeto)
+        console.log('retAccountBalances', returnBalances)
+        cookieStore.set({
+            name: "accountBalances",
+            value: JSON.stringify(retAccountBalances),
+            sameSite: 'strict'
+        })
+        return JSON.stringify(retAccountBalances)
+        // try {
+        //     const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
+        //         contasSTR: objeto
+        //     })
+        //     console.log('accpimts ballance')
+        //     cookieStore.set({
+        //         name: "accountBalances",
+        //         value: JSON.stringify(AccountsBalance.data),
+        //         sameSite: 'strict'
+        //     })
+        //     return AccountsBalance.data
+        // } catch (err) {
+        //     console.log(err)
+        // }
 
     } catch (e) {
         return NextResponse.json({ e })
@@ -113,57 +126,47 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
 }
 
 
-// async function carrega_balances(ok: boolean, objeto: any, tradermasterKey: string, tradermasterSecret: string) {
+async function returnListenKey(tradermasterKey: string) {
 
-//     const cookieStore = cookies()
-//     if (ok) {
+    try {
+        console.log('listen key')
 
-//         try {
-//             console.log('listen key')
+        const listenKey = await api.post('/take-listen-key', {
+            apiKey: tradermasterKey
+        })
+        return listenKey.data
+    } catch (err) {
+        console.log(err)
+    }
 
-//             const listenKey = await api.post('/take-listen-key', {
-//                 apiKey: tradermasterKey
-//             })
-//             cookieStore.set({
-//                 name: "listen",
-//                 value: JSON.stringify(listenKey.data.listenKey),
-//                 sameSite: 'strict'
-//             })
-//         } catch (err) {
-//             console.log(err)
-//         }
 
-//         try {
-//             const valoresIniciais = await api.post('/get-account-balance-usdt', {
-//                 // apiKey: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
-//                 // apiSecret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
+}
 
-//                 apiKey: tradermasterKey,
-//                 apiSecret: tradermasterSecret,
-//             });
-//             console.log('Valores iniciais:', valoresIniciais.data);
-//             cookieStore.set({
-//                 name: "ValorInicialMaster",
-//                 value: JSON.stringify(valoresIniciais.data),
-//                 sameSite: 'strict'
-//             })
-//         } catch (err) {
-//             console.log(err)
-//         }
 
-//         try {
-//             console.log('accpimts ballance')
-//             const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
-//                 contasSTR: objeto
-//             })
-//             cookieStore.set({
-//                 name: "accountBalances",
-//                 value: JSON.stringify(AccountsBalance.data),
-//                 sameSite: 'strict'
-//             })
-//             return AccountsBalance.data
-//         } catch (err) {
-//             console.log(err)
-//         }
-//     }
-// }
+async function returnValoresIniciaisMaster(tradermasterKey: string, tradermasterSecret: string) {
+    try {
+        const valoresIniciais = await api.post('/get-account-balance-usdt', {
+            apiKey: tradermasterKey,
+            apiSecret: tradermasterSecret,
+        });
+        console.log('Valores iniciais:', valoresIniciais.data);
+        return valoresIniciais.data
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+async function returnBalances(objeto: any) {
+    try {
+        console.log('accpimts ballance')
+        const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
+            contasSTR: objeto
+        })
+        console.log(AccountsBalance.data)
+        return AccountsBalance.data
+    } catch (err) {
+        console.log(err)
+    }
+
+}
