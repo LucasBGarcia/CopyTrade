@@ -23,16 +23,16 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         console.log(splitMaster[0].trim());
         console.log(splitMaster[1].trim());
 
-        // if (splitMaster) {
-            console.log('valores iniciais antes');
-            const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim());
-            console.log('Valores iniciais:', retValoresIniciaisMaster);
-            cookieStore.set({
-                name: "ValorInicialMaster",
-                value: JSON.stringify(retValoresIniciaisMaster),
-                sameSite: 'strict'
-            });
-        // }
+        // // if (splitMaster) {
+        //     console.log('valores iniciais antes');
+        //     const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim());
+        //     console.log('Valores iniciais:', retValoresIniciaisMaster);
+        //     cookieStore.set({
+        //         name: "ValorInicialMaster",
+        //         value: JSON.stringify(retValoresIniciaisMaster),
+        //         sameSite: 'strict'
+        //     });
+        // // }
 
         const splitClientes = keysClientes.split(',');
 
