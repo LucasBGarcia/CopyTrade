@@ -41,16 +41,16 @@ export default function ModalLoadMaster({ Open, onClose }: ModalLoadMasterProps)
     console.log('response', response)
     if (response) {
       onClose(response)
-    } 
+    }
     setKeysMaster('');
     setKeysClientes('');
   };
 
   async function handleSaveMaster() {
     setLoading(true)
-    const response = LoadAccountsAPI(keysMaster, keysClientes)
+    const response = await LoadAccountsAPI(keysMaster, keysClientes)
     console.log('response', response)
-  
+
     if (response) {
       console.log(response)
       handleClose(response)
