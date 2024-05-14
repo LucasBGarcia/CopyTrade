@@ -26,10 +26,13 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             key: splitMaster[0],
             secret: splitMaster[1]
         }
+        console.log(splitMaster[0].trim())
+        console.log(splitMaster[1].trim())
+
         if (splitMaster) {
+            console.log('valores iniciais antes')
             try {
-                console.log('valores iniciais antes')
-                const valoresIniciais = await axios.post('http://localhost:3000/get-account-balance-usdt', {
+                const valoresIniciais = await api.post('/get-account-balance-usdt', {
                     apiKey: splitMaster[0].trim(),
                     apiSecret: splitMaster[1].trim(),
                 });
