@@ -40,8 +40,9 @@ export default function Home() {
     try {
       const trade = await StartBot()
       setTradeReceived(trade)
-      const newTrade = await Trade(trade)
-      console.log('trade', trade)
+      console.log( 'trade na home', trade)
+      // const newTrade = await Trade(trade)
+      // console.log('trade', trade)
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
     }
