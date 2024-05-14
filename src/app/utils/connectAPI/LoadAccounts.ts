@@ -70,8 +70,11 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             value: JSON.stringify(retAccountBalances),
             sameSite: 'strict'
         });
-
-        return JSON.stringify(retAccountBalances);
+        const data = [
+            { name: '"Renan teste"', balance: '"365.90153910"' },
+            { name: '"Bruno"', balance: '"565.54007698"' }
+        ]
+        return JSON.stringify(data);
     } catch (e) {
         console.error('Error:', e);
         return NextResponse.json({ error: e });
