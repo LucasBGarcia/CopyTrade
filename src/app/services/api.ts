@@ -1,7 +1,19 @@
-import axios from "axios";
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3000", // Substitua pelo endereço público do seu backend
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export default api;
+
+
+// import axios from "axios";
+
+// const api = axios.create({
+//   baseURL: "http://localhost:3000",
+// });
+
+// export default api;
