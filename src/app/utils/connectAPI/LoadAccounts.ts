@@ -67,6 +67,8 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             sameSite: 'strict'
         })
         try {
+            console.log('listen key')
+
             const listenKey = await api.post('/take-listen-key',{
                 apiKey:traderMaster.key
             })
@@ -87,7 +89,8 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         // }))
 
         try{
-            const AccountsBalance = await api.post('/get-All-account-balance-usdt',{
+            console.log('accpimts ballance')
+                        const AccountsBalance = await api.post('/get-All-account-balance-usdt',{
                 contasSTR: objeto
             })
             cookieStore.set({
