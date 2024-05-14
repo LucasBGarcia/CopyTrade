@@ -25,12 +25,15 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         console.log(splitMaster[0].trim())
         console.log(splitMaster[1].trim())
 
-        if (splitMaster) {
+        // if (splitMaster) {
             console.log('valores iniciais antes')
             try {
                 const valoresIniciais = await api.post('/get-account-balance-usdt', {
-                    apiKey: splitMaster[0].trim(),
-                    apiSecret: splitMaster[1].trim(),
+                    apiKey: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
+                    apiSecret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
+                   
+                    // apiKey: splitMaster[0].trim(),
+                    // apiSecret: splitMaster[1].trim(),
                 });
                 console.log('Valores iniciais:', valoresIniciais.data);
                 cookieStore.set({
@@ -41,7 +44,7 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             } catch (err) {
                 console.log(err)
             }
-        }
+        // }
 
         const splitClientes = keysClientes.split(',')
 
@@ -98,7 +101,7 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         } catch (err) {
             console.log(err)
         }
-    console.log('keys recebidas em baixo', keysMaster, keysClientes)
+        console.log('keys recebidas em baixo', keysMaster, keysClientes)
 
     } catch (e) {
         return NextResponse.json({ e })
