@@ -23,16 +23,16 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         console.log(splitMaster[0].trim());
         console.log(splitMaster[1].trim());
 
-        // // if (splitMaster) {
-        //     console.log('valores iniciais antes');
-        //     const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim());
-        //     console.log('Valores iniciais:', retValoresIniciaisMaster);
-        //     cookieStore.set({
-        //         name: "ValorInicialMaster",
-        //         value: JSON.stringify(retValoresIniciaisMaster),
-        //         sameSite: 'strict'
-        //     });
-        // // }
+        // if (splitMaster) {
+            console.log('valores iniciais antes');
+            const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim());
+            console.log('Valores iniciais:', retValoresIniciaisMaster);
+            cookieStore.set({
+                name: "ValorInicialMaster",
+                value: JSON.stringify(retValoresIniciaisMaster),
+                sameSite: 'strict'
+            });
+        // }
 
         const splitClientes = keysClientes.split(',');
 
@@ -63,18 +63,18 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             sameSite: 'strict'
         });
 
-        // const retAccountBalances = await returnBalances(objeto);
-        // console.log('retAccountBalances', retAccountBalances);
-        // cookieStore.set({
-        //     name: "accountBalances",
-        //     value: JSON.stringify(retAccountBalances),
-        //     sameSite: 'strict'
-        // });
-        const data = [
-            { name: '"Renan teste"', balance: '"365.90153910"' },
-            { name: '"Bruno"', balance: '"565.54007698"' }
-        ]
-        return JSON.stringify(data);
+        const retAccountBalances = await returnBalances(objeto);
+        console.log('retAccountBalances', retAccountBalances);
+        cookieStore.set({
+            name: "accountBalances",
+            value: JSON.stringify(retAccountBalances),
+            sameSite: 'strict'
+        });
+        // const data = [
+        //     { name: '"Renan teste"', balance: '"365.90153910"' },
+        //     { name: '"Bruno"', balance: '"565.54007698"' }
+        // ]
+        return JSON.stringify(retAccountBalances);
     } catch (e) {
         console.error('Error:', e);
         return NextResponse.json({ error: e });
@@ -103,6 +103,19 @@ async function returnValoresIniciaisMaster(tradermasterKey: string, tradermaster
         return valoresIniciais.data;
     } catch (err) {
         console.error(err);
+    }
+}
+
+export async function returnBalancesToHome() {
+    const cookieStore = cookies()
+    const clientsSTR = cookieStore.get('clients')
+    if(clientsSTR){
+        const clientsParse = JSON.parse(clientsSTR.value)
+        const ret  = await returnBalances(clientsParse)
+        
+        return ret
+    }else{
+        return null
     }
 }
 
