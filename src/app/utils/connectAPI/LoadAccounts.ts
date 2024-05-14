@@ -1,15 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 "use server"
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse } from 'next/server'
-import { cookies } from "next/headers";
-import { TakeListenKey } from './TakeListenKey';
-import strict from 'assert/strict';
-import { InfoAccountBalance, getInfoAccountBalance } from './infoAccountBalance';
 import api from '@/app/services/api';
-import axios from 'axios';
+import { cookies } from "next/headers";
+import { NextResponse } from 'next/server';
 
 export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) {
+    console.log('keys recebidas em cima', keysMaster, keysClientes)
     let objeto = []
     let traderMaster = {
         key: '',
@@ -69,8 +65,8 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         try {
             console.log('listen key')
 
-            const listenKey = await api.post('/take-listen-key',{
-                apiKey:traderMaster.key
+            const listenKey = await api.post('/take-listen-key', {
+                apiKey: traderMaster.key
             })
             cookieStore.set({
                 name: "listen",
@@ -88,9 +84,9 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         //     accountsBalance = AccountsBalance
         // }))
 
-        try{
+        try {
             console.log('accpimts ballance')
-                        const AccountsBalance = await api.post('/get-All-account-balance-usdt',{
+            const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
                 contasSTR: objeto
             })
             cookieStore.set({
@@ -99,11 +95,10 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
                 sameSite: 'strict'
             })
             return AccountsBalance.data
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
-
-     
+    console.log('keys recebidas em baixo', keysMaster, keysClientes)
 
     } catch (e) {
         return NextResponse.json({ e })
