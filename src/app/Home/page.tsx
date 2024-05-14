@@ -22,18 +22,18 @@ export default function Home() {
 
 
 
-  // async function carregaValores() {
-  //   const valores = await InfoAccountBalance()
-  //   if (valores) {
-  //     setModalResponse(valores)
-  //   }
-  //   setLoading(false)
-  // }
-  // useEffect(() => {
-  //   setLoading(true)
+  async function carregaValores() {
+    const valores = await InfoAccountBalance()
+    if (valores) {
+      setModalResponse(valores)
+    }
+    setLoading(false)
+  }
+  useEffect(() => {
+    setLoading(true)
 
-  //   carregaValores()
-  // }, [])
+    carregaValores()
+  }, [])
 
   async function AtivarBot() {
     setWaitingTrade(true)
@@ -61,7 +61,7 @@ export default function Home() {
       setModalResponse(response);
       setLoading(false)
     } else {
-      // carregaValores()
+      carregaValores()
       setLoading(false)
     }
   };
