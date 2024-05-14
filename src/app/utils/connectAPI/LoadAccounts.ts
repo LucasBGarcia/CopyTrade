@@ -89,20 +89,20 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
         //     accountsBalance = AccountsBalance
         // }))
 
+        const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
+            contasSTR: objeto
+        })
         try {
             console.log('accpimts ballance')
-            const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
-                contasSTR: objeto
-            })
             cookieStore.set({
                 name: "accountBalances",
                 value: JSON.stringify(AccountsBalance.data),
                 sameSite: 'strict'
             })
-            return AccountsBalance.data
         } catch (err) {
             console.log(err)
         }
+        return AccountsBalance.data
         // const ret = await carrega_balances(true, objeto, splitMaster[0].trim(), splitMaster[1].trim(),)
         // console.log('keys recebidas em baixo', keysMaster, keysClientes)
         // return (ret)
