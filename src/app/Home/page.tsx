@@ -9,6 +9,7 @@ import { StartBot } from "../utils/StartBot/StartBot";
 import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
 import { Trade } from "../utils/trade/trade";
 import api from "../services/api";
+import { returnBalancesToHome } from "../utils/connectAPI/LoadAccounts";
 
 
 export default function Home() {
@@ -22,18 +23,18 @@ export default function Home() {
 
 
 
-  // async function carregaValores() {
-  //   const valores = await InfoAccountBalance()
-  //   if (valores) {
-  //     setModalResponse(valores)
-  //   }
-  //   setLoading(false)
-  // }
-  // useEffect(() => {
-  //   setLoading(true)
+  async function carregaValores() {
+    const valores = await returnBalancesToHome()
+    if (valores) {
+      setModalResponse(valores)
+    }
+    setLoading(false)
+  }
+  useEffect(() => {
+    setLoading(true)
 
-  //   carregaValores()
-  // }, [])
+    carregaValores()
+  }, [])
 
   async function AtivarBot() {
     setWaitingTrade(true)
