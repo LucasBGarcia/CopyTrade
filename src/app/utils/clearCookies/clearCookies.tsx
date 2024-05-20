@@ -8,5 +8,6 @@ export async function ClearCookies() {
     cookieStore.delete('listen')
     cookieStore.delete('accountBalances')
     cookieStore.delete('ValorInicialMaster')
+    console.log('cookies limpos')
     return true
 }

@@ -20,27 +20,31 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             secret: splitMaster[1]
         };
 
-        // if (splitMaster) {
-        returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim())
-            .then(data => {
-                console.log('Data:', data);
+        if (splitMaster) {
+            // returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim())
+            //     .then(data => {
+            //         console.log('Data:', data);
+            //         cookieStore.set({
+            //             name: "ValorInicialMaster",
+            //             value: JSON.stringify(data),
+            //             sameSite: 'strict'
+            //         });
+            //     })
+            //     .catch(err => {
+            //         console.error('Error:', err);
+            //     });
+            try {
+                const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim());
                 cookieStore.set({
                     name: "ValorInicialMaster",
-                    value: JSON.stringify(data),
+                    value: JSON.stringify(retValoresIniciaisMaster),
                     sameSite: 'strict'
                 });
-            })
-            .catch(err => {
-                console.error('Error:', err);
-            });
 
-        // const retValoresIniciaisMaster = await returnValoresIniciaisMaster(splitMaster[0].trim(), splitMaster[1].trim());
-        // cookieStore.set({
-        //     name: "ValorInicialMaster",
-        //     value: JSON.stringify(retValoresIniciaisMaster),
-        //     sameSite: 'strict'
-        // });
-        // }
+            } catch (err) {
+                console.log('erro aqui no valores iniciais', err)
+            }
+        }
 
         const splitClientes = keysClientes.split(',');
 
@@ -62,33 +66,42 @@ export async function LoadAccountsAPI(keysMaster: string, keysClientes: string) 
             value: JSON.stringify(traderMaster),
             sameSite: 'strict'
         });
+        try {
+            const retListenKey = await returnListenKey(traderMaster.key);
+            cookieStore.set({
+                name: "listen",
+                value: retListenKey.listenKey,
+                sameSite: 'strict'
+            });
+        } catch (err) {
+            console.log('erro aqui no return listen key', err)
+        }
 
-        const retListenKey = await returnListenKey(traderMaster.key);
-        cookieStore.set({
-            name: "listen",
-            value: retListenKey.listenKey,
-            sameSite: 'strict'
-        });
+        // returnBalances(objeto)
+        //     .then(data => {
+        //         cookieStore.set({
+        //             name: "accountBalances",
+        //             value: JSON.stringify(data),
+        //             sameSite: 'strict'
+        //         });
+        //         return JSON.stringify(data);
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //     })
 
-        returnBalances(objeto)
-            .then(data => {
-                cookieStore.set({
-                    name: "accountBalances",
-                    value: JSON.stringify(data),
-                    sameSite: 'strict'
-                });
-                return JSON.stringify(data);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        // const retAccountBalances = await returnBalances(objeto);
-        // cookieStore.set({
-        //     name: "accountBalances",
-        //     value: JSON.stringify(retAccountBalances),
-        //     sameSite: 'strict'
-        // });
-        // return JSON.stringify(retAccountBalances);
+        try {
+            const retAccountBalances = await returnBalances(objeto);
+            cookieStore.set({
+                name: "accountBalances",
+                value: JSON.stringify(retAccountBalances),
+                sameSite: 'strict'
+            });
+
+            return JSON.stringify(retAccountBalances);
+        } catch (err) {
+            console.log('erro aqui account balance', err)
+        }
     } catch (e) {
         console.error('Error:', e);
         return NextResponse.json({ error: e });
@@ -114,7 +127,8 @@ async function returnValoresIniciaisMaster(tradermasterKey: string, tradermaster
         });
         return valoresIniciais.data;
     } catch (err) {
-        console.error(err);
+        console.log('erro aqui', err);
+
         return null
     }
 }
@@ -134,12 +148,14 @@ export async function returnBalancesToHome() {
 
 async function returnBalances(objeto: any) {
     try {
+        // console.log('objeto', objeto)
         const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
             contasSTR: objeto
         });
+        console.log('RETORNO ACCOUNTS BALANCE', AccountsBalance.data)
         return AccountsBalance.data;
     } catch (err) {
-        console.error(err);
+        console.log('erro aqui', err);
         return null
     }
 }
