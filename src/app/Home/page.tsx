@@ -62,7 +62,7 @@ export default function Home() {
       setModalResponse(response);
       setLoading(false)
     } else {
-      // carregaValores()
+      carregaValores()
       setLoading(false)
     }
   };

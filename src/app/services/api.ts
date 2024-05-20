@@ -13,7 +13,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://456d-181-220-100-11.ngrok-free.app",
+  // baseURL: "http://localhost:3000",
+  baseURL: "http://18.231.10.224:3000/",
 });
 
 export default api;
