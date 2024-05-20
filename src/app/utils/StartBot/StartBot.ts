@@ -13,11 +13,8 @@ export async function StartBot() {
        try{
 
            if (listenKey) {
-               const listenKeyParse = JSON.parse(listenKey.value)
-               console.log("listenKey parse", listenKeyParse)
-               
                const start = await api.post('start-bot', {
-                   listenKey: listenKeyParse
+                   listenKey: listenKey.value
                 })
                 console.log('start', start.data)
                 return start.data
