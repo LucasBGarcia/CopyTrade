@@ -9,7 +9,7 @@ export const Navbar = () => {
         if(await cleared) window.location.reload();
     }
     return (
-        <Box bgcolor={'#606060'}>
+        <Box  position="static" height={'60px'} bgcolor={'#606060'}>
             <Toolbar>
                 <Typography>bot cripto</Typography>
                 <Button  style={{fontWeight:'bold', marginLeft:3}} variant="outlined" color="success" onClick={(e) =>  limparCookies()}>Limpar cookies</Button>
