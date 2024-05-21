@@ -16,8 +16,8 @@ export async function StartBot() {
                const start = await api.post('start-bot', {
                    listenKey: listenKey.value
                 })
-                console.log('start', start.data)
-                return start.data
+                console.log('start', start.data.value)
+                return start.data.value
                 // resolve(start)
             }
         }catch(err){

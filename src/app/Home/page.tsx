@@ -40,8 +40,8 @@ export default function Home() {
     setWaitingTrade(true)
     try {
       const trade = await StartBot()
-      setTradeReceived(trade)
       console.log( 'trade na home', trade)
+      setTradeReceived(trade)
       // const newTrade = await Trade(trade)
       // console.log('trade', trade)
     } catch (error) {
@@ -98,7 +98,7 @@ export default function Home() {
         !loading ?
           <>
             <Box width='100%'
-              height='100vh'
+              height='100%'
               display='flex'
               flexDirection='row'
               // alignItems='center'
