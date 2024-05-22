@@ -27,6 +27,7 @@ export default function Home() {
 
   async function carregaValores() {
     const valores = await returnBalancesToHome()
+    console.log('valores', valores)
     if (valores) {
       setModalResponse(valores)
     }
