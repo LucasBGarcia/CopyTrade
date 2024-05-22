@@ -113,7 +113,7 @@ async function returnListenKey(tradermasterKey: string) {
         const listenKey = await api.post('/take-listen-key', {
             apiKey: tradermasterKey
         });
-        return listenKey.data;
+        return listenKey.data.value;
     } catch (err) {
         console.error(err);
     }
@@ -125,7 +125,7 @@ async function returnValoresIniciaisMaster(tradermasterKey: string, tradermaster
             apiKey: tradermasterKey,
             apiSecret: tradermasterSecret,
         });
-        return valoresIniciais.data;
+        return valoresIniciais.data.value;
     } catch (err) {
         console.log('erro aqui', err);
 
@@ -148,12 +148,12 @@ export async function returnBalancesToHome() {
 
 async function returnBalances(objeto: any) {
     try {
-        // console.log('objeto', objeto)
         const AccountsBalance = await api.post('/get-All-account-balance-usdt', {
             contasSTR: objeto
         });
-        console.log('RETORNO ACCOUNTS BALANCE', AccountsBalance.data)
-        return AccountsBalance.data;
+        if (AccountsBalance.data.status === 200) {
+            return AccountsBalance.data.value;
+        }
     } catch (err) {
         console.log('erro aqui', err);
         return null

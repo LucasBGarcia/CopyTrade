@@ -63,14 +63,7 @@ export async function InfoAccount(apiSecret: string, apiKey: string) {
                 'X-MBX-APIKEY': apiKey,
             },
         });
-        // const resultFutures = await axios({
-        //     method: 'GET',
-        //     url: `${apiUrlFutures}/v2/balance?${queryString}&signature=${signature}`,
-        //     headers: {
-        //         'X-MBX-APIKEY': apiKey
-        //     },
-        // });
-        // console.log(resultFutures.data)
+        
         const response = await result.json()
         console.log('resulto infoAccount', response)
         const res = {

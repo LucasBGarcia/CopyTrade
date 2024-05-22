@@ -1,18 +1,20 @@
 "use client"
 
-import { Box, Button, CircularProgress, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, LinearProgress, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import InfosTrade from "../components/InfosTrade";
 import ModalLoadMaster from "../components/ModalLoadMaster";
 import TableAccountBalance from "../components/TableAccoutBalance";
-import { StartBot } from "../utils/StartBot/StartBot";
-import { InfoAccount, InfoAccountBalance } from "../utils/connectAPI/infoAccountBalance";
-import { Trade } from "../utils/trade/trade";
 import api from "../services/api";
+import { StartBot } from "../utils/StartBot/StartBot";
 import { returnBalancesToHome } from "../utils/connectAPI/LoadAccounts";
-
+import { Trade } from "../utils/trade/trade";
 
 export default function Home() {
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [OpenModal, setOpenModal] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
@@ -36,19 +38,26 @@ export default function Home() {
     carregaValores()
   }, [])
 
-  async function AtivarBot() {
+  async function AtivarBot(pausarBot: boolean) {
     setWaitingTrade(true)
     try {
-      const trade = await StartBot()
-      setTradeReceived(trade)
-      console.log( 'trade na home', trade)
-      // const newTrade = await Trade(trade)
-      // console.log('trade', trade)
+      if (!pausarBot) {
+        const trade = await StartBot(true)
+        console.log('trade na home', trade)
+        setTradeReceived(trade.value)
+        const newTrade = await Trade(trade.value)
+        console.log('Trade', trade)
+        console.log('newTrade', newTrade)
+      } else {
+        console.log('aqui no else')
+          StartBot(false)
+        }
     } catch (error) {
       console.error('Erro ao ativar bot:', error)
     }
     setWaitingTrade(false)
   }
+
   async function LoadAccountMaster() {
     setLoading(true)
     setOpenModal(true)
@@ -74,9 +83,9 @@ export default function Home() {
     try {
       const valoresIniciais = await api.post('/get-account-balance-usdt', {
         apiKey: '4SYTGW0z943oiusiWL0NU89FWBkNAT9Fh7YaLSrhvmxeowQV8slnOVk5Ue5Qoxxo',
-        apiSecret:'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
-    });
-    console.log('Valores iniciais:', valoresIniciais.data);
+        apiSecret: 'bbFwPoARmSK6Pq3L23NRzAY6Fji9BkjjSAuIy82bl43BZ8vwM2UE5hJmncBvZBiP',
+      });
+      console.log('Valores iniciais:', valoresIniciais.data);
 
       // const trade = await api.get('/take-listen-key')
       // console.log('trade', trade)
@@ -86,10 +95,14 @@ export default function Home() {
     setWaitingTrade(false)
   }
   return (
+    // <ThemeProvider theme={theme}>
+
+    //   <Responsive>
     <Box
+      marginTop={'5px'}
       width='100%'
       height='100vh'
-      display='flex'
+    // display='flex'
     // flexDirection='column'
     // alignItems='center'
     // justifyContent='center'
@@ -98,28 +111,24 @@ export default function Home() {
         !loading ?
           <>
             <Box width='100%'
-              height='100vh'
               display='flex'
-              flexDirection='row'
-              // alignItems='center'
+              flexDirection={isMobile ? 'column' : 'row'}
+              alignItems='center'
               justifyContent='center'
             >
-
               <Box
                 display='flex'
                 flexDirection='column'
                 width={'100%'}
                 alignItems='center'
-                marginTop={1}
               >
-
                 {modalResponse ? (
                   <Box
                     display='flex'
                     flexDirection='column'
                     width={'80%'}
                   >
-                    <TableAccountBalance modalResponse={modalResponse} />
+                    <TableAccountBalance  modalResponse={modalResponse} />
                     {TradeReceived ?
                       <Box
                         display='flex'
@@ -163,16 +172,25 @@ export default function Home() {
                 <Button variant='contained' onClick={() => LoadAccountMaster()}>
                   Carregar contas
                 </Button>
-                {(modalResponse && !WaitingTrade) ?
-                  <Button variant='contained' onClick={() => AtivarBot()}>
-                    Ativar bot
-                  </Button>
-
+                {(modalResponse) ?
+                  <>
+                    {
+                      !WaitingTrade ?
+                        <Button variant='contained' onClick={() => AtivarBot(false)}>
+                          Ativar bot
+                        </Button>
+                        :
+                        <Button variant='contained' onClick={() => AtivarBot(true)}>
+                          Pausar
+                        </Button>
+                    }
+                  </>
                   : null
                 }
-                <Button variant='contained' onClick={() => Funcaoteste()}>
+
+                {/* <Button variant='contained' onClick={() => Funcaoteste()}>
                   botao para testes de retornos
-                </Button>
+                </Button> */}
                 {
                   WaitingTrade ?
                     <Box
@@ -212,6 +230,8 @@ export default function Home() {
       }
       <ModalLoadMaster Open={OpenModal} onClose={handleModalClose} />
     </Box >
+    //   </Responsive>
 
+    // </ThemeProvider>
   );
 }

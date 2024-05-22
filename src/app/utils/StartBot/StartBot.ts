@@ -4,7 +4,7 @@ import { getInfoAccountBalance } from "../connectAPI/infoAccountBalance";
 import WebSocket from 'ws'
 import api from "@/app/services/api";
 
-export async function StartBot() {
+export async function StartBot(AtivaBot:boolean) {
     const cookieStore = cookies()
     // return new Promise(async(resolve, reject) => {
 
@@ -14,7 +14,8 @@ export async function StartBot() {
 
            if (listenKey) {
                const start = await api.post('start-bot', {
-                   listenKey: listenKey.value
+                   listenKey: listenKey.value,
+                   AtivaBot: AtivaBot
                 })
                 console.log('start', start.data)
                 return start.data
@@ -22,6 +23,7 @@ export async function StartBot() {
             }
         }catch(err){
             console.log(err)
+            return("Bot pausado")
             // reject(err)
         }
     // })
