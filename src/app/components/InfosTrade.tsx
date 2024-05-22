@@ -12,10 +12,10 @@ export default function InfosTrade(dados: any) {
                 <Typography> Novo trade efetuado na conta master:</Typography>
             </Box>
             <Box>
-                <Typography>Mercado/Limit: <strong>{dados.dados.o}</strong></Typography>
-                <Typography>Par de moeda: <strong>{dados.dados.s}</strong></Typography>
-                <Typography>Buy/Sell: <strong>{dados.dados.S}</strong></Typography>
-                <Typography>New/Canceled: <strong>{dados.dados.X}</strong></Typography>
+                <Typography>Mercado/Limit: <strong>{dados.dados.value.o}</strong></Typography>
+                <Typography>Par de moeda: <strong>{dados.dados.value.s}</strong></Typography>
+                <Typography>Buy/Sell: <strong>{dados.dados.value.S}</strong></Typography>
+                <Typography>New/Canceled: <strong>{dados.dados.value.X}</strong></Typography>
             </Box>
         </Box>
     )
