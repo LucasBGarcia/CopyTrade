@@ -47,10 +47,10 @@ export default function Home() {
           // const trade = await tradeSTR.json()
           console.log('trade na home', tradeSTR)
           setTradeReceived(tradeSTR)
+          const newTrade = await Trade(tradeSTR)
+          console.log('Trade', tradeSTR)
+          console.log('newTrade', newTrade)
         }
-        // const newTrade = await Trade(trade.value)
-        // console.log('Trade', trade)
-        // console.log('newTrade', newTrade)
       } else {
         console.log('aqui no else')
           StartBot(false)

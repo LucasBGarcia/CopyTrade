@@ -1,7 +1,6 @@
 import { Box, Typography } from "@mui/material"
 
 export default function InfosTrade(dados: any) {
-    console.log('dados', dados.dados)
     return (
         <Box width='100%'
             display='flex'
