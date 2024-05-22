@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { tradePorcentageMaster } from "../calculation/percentage";
 import { copyTrade } from "./CopyTrade.";
+import api from "@/app/services/api";
 
 export async function Trade(trade: any) {
     const cookieStore = cookies()
@@ -35,11 +36,31 @@ export async function Trade(trade: any) {
             }
 
             if (verifyOld.length == 0) {
+                const ValorInicialMasterStr = cookieStore.get('ValorInicialMaster')
+                const ValorInicialMaster  = ValorInicialMasterStr? JSON.parse(ValorInicialMasterStr.value): 0               
+                const KeysMasterStr = cookieStore.get('master') 
+                const KeysMaster= KeysMasterStr? JSON.parse(KeysMasterStr.value): null
+                
                 oldOrders.push(trade.i)
                 const porcentagemMaster = await tradePorcentageMaster()
-                await handleNewOrders(trade, accountsParse, porcentagemMaster)
+                const responseNewTrade = await api.post('/new-trade', {
+                    trade: trade,
+                    accounts: accountsParse,
+                    ValorInicialMaster,
+                    KeysMaster
+
+                })
+                console.log("NEW TRADE", responseNewTrade)
                 cookieStore.set('oldOrders', JSON.stringify(oldOrders))
             }
+
+            // if (verifyOld.length == 0) {
+            //     oldOrders.push(trade.i)
+            //     const porcentagemMaster = await tradePorcentageMaster()
+            //     await handleNewOrders(trade, accountsParse, porcentagemMaster)
+            //     cookieStore.set('oldOrders', JSON.stringify(oldOrders))
+            // }
+
         }
 
     } catch (err) {
