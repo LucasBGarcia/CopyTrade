@@ -42,12 +42,15 @@ export default function Home() {
     setWaitingTrade(true)
     try {
       if (!pausarBot) {
-        const trade = await StartBot(true)
-        console.log('trade na home', trade)
-        setTradeReceived(trade.value)
-        const newTrade = await Trade(trade.value)
-        console.log('Trade', trade)
-        console.log('newTrade', newTrade)
+        const tradeSTR = await StartBot(true)
+        if(tradeSTR){
+          // const trade = await tradeSTR.json()
+          console.log('trade na home', tradeSTR)
+          setTradeReceived(tradeSTR)
+        }
+        // const newTrade = await Trade(trade.value)
+        // console.log('Trade', trade)
+        // console.log('newTrade', newTrade)
       } else {
         console.log('aqui no else')
           StartBot(false)
