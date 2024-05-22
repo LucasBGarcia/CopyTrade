@@ -30,7 +30,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function TableAccountBalance(modalResponse: any) {
-  console.log('response recebido no TableAccountBalance', modalResponse)
   return (
     <TableContainer style={{height:'100%'}} component={Paper}>
       <Table aria-label="customized table">
