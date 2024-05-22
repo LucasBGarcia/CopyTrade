@@ -128,7 +128,7 @@ export default function Home() {
                     flexDirection='column'
                     width={'80%'}
                   >
-                    <TableAccountBalance height='100%' modalResponse={modalResponse} />
+                    <TableAccountBalance  modalResponse={modalResponse} />
                     {TradeReceived ?
                       <Box
                         display='flex'
